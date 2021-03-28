@@ -1,48 +1,146 @@
 //python -m http.server
 
-// 1. Use the D3 library to read in `samples.json`.
+//Use the D3 library to read in `samples.json`.
 d3.json("samples.json").then((data) => {
     console.log(data)
-
+    //---------------------------------------
     //Grab values from the samples.json file
+    //---------------------------------------
+
     //Grab id numbers from the names array
     var SubjectIDNo = data.names
-    
 
     //Grab sample_values from the samples array 
     var sampleValues = new Array()
     for (var i = 0; i < data.samples.length; i++) {
         sampleValues[data.samples[i]["id"]] = data.samples[i].sample_values;
-    }    
+    }
+    //Grab otu_ids from the samples array 
+    var otuIds = new Array()
+    for (var i = 0; i < data.samples.length; i++) {
+        otuIds[data.samples[i]["id"]] = data.samples[i].otu_ids;
+    }
+    //Grab otu_labels from the samples array 
+    var otuLabels = new Array()
+    for (var i = 0; i < data.samples.length; i++) {
+        otuLabels[data.samples[i]["id"]] = data.samples[i].otu_labels;
+    }
 
-    
-    //console.logs to test value grabs
-    console.log(sampleValues)
-    console.log(SubjectIDNo)
-    
-       
+    //Grab demographic info from the metadata array 
+    //Age
+    var mdAge = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdAge[data.metadata[i]["id"]] = data.metadata[i].age;
+    }
+
+    //bbtype
+    var mdBbtype = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdBbtype[data.metadata[i]["id"]] = data.metadata[i].bbtype;
+    }
+    //ethnicity
+    var mdEthnic = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdEthnic[data.metadata[i]["id"]] = data.metadata[i].ethnicity;
+    }
+    //gender
+    var mdGender = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdGender[data.metadata[i]["id"]] = data.metadata[i].gender;
+    }
+    //id
+    var mdId = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdId[data.metadata[i]["id"]] = data.metadata[i].id;
+    }
+    //location
+    var mdLocate = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdLocate[data.metadata[i]["id"]] = data.metadata[i].location;
+    }
+    //wfreq
+    var mdFreq = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdFreq[data.metadata[i]["id"]] = data.metadata[i].wfreq;
+    }
+
+    // //console.logs to test value grabs   
+    // console.log(SubjectIDNo)
+    // console.log(sampleValues)
+    // console.log(otuIds)
+    // console.log(otuLabels)
+    // console.log(mdAge)
+    // console.log(mdBbtype)
+    // console.log(mdEthnic)
+    // console.log(mdGender)
+    // console.log(mdId)
+    // console.log(mdLocate)
+    // console.log(mdFreq)  
+
+    //--------------------------------------------
+    //Assign ID number list to ID dropdown 
+    //--------------------------------------------
+
+    var dropdownMenu = d3.selectAll("#selDataset")
+    var idSelect = []
+
+    SubjectIDNo.forEach(id => {
+        idSelect.push(id)
+        dropdownMenu.append("option").text(id).property("value", id)
+    })
+
+    //----------------------------------------------------
+    //Create Event Handler & Selected Value to a Variable
+    //----------------------------------------------------
 
     //Use D3 to create an event handler
     d3.selectAll("body").on("change", updatePage);
 
     function updatePage() {
-        //use D3 to select the dropdown menu
-        var dropdownMenu = d3.selectAll("#selDataset")
-        //Assign the vaue of the dropdown menu to a variable
+        
+        //Assign the value of the dropdown menu to a variable
         var dataID = dropdownMenu.property("value")
+       
+        //----------------------------------------------------
+        //Create Variable for Charts and Table
+        //----------------------------------------------------
+
+        //Sample Set Variables
+        var sampleSet = sampleValues[dataID]    //sample_values       
+        var otuIdSet = otuIds[dataID]           //otu_ids     
+        var otuLabelSet = otuLabels[dataID]     //otu_labels
+        var ageDi = mdAge[dataID]               //age
+        var bbtypeDi = mdBbtype[dataID]         //bbtype
+        var ethnicityDi = mdEthnic[dataID]      //ethnicity
+        var genderDi = mdGender[dataID]         //gender
+        var idDi = mdId[dataID]                 //id
+        var locationDi = mdLocate[dataID]       //location
+        var wfreqDi = mdFreq[dataID]            //wfreq
+
+        //console.logs to test value grabs
         console.log(dataID)
-
-        var sampleSet = sampleValues[dataID]
         console.log(sampleSet)
+        console.log(otuIdSet)
+        console.log(otuLabelSet)
+        console.log(ageDi)
+        console.log(bbtypeDi)
+        console.log(ethnicityDi)
+        console.log(genderDi)
+        console.log(idDi)
+        console.log(locationDi)
+        console.log(wfreqDi)
 
-        // 2. Create a horizontal bar chart to 
-        //      display the top 10 OTUs found in that individual.
-        // var idSampleValues = data.forEach(sampleValue => sampleValue.samples == dataID)
-        // console.log(idSampleValues)
+        //----------------------------------------------------
+        //Create a horizontal bar chart to display the top 10
+        //OTUs found in that individual.
+        //----------------------------------------------------
+        
 
-
+    //----------------------------------------------------
     }  // end function updatePage(){
+//----------------------------------------------------
 })  // end d3.json("samples.json").then((data) => {}
+//----------------------------------------------------
 
 
 
