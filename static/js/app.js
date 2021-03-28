@@ -34,6 +34,13 @@ d3.json("samples.json").then((data) => {
 
     //Grab demographic info from the metadata array 
     //Age
+    var mdAll = new Array()
+    for (var i = 0; i < data.metadata.length; i++) {
+        mdAll[data.metadata[i]["id"]] = data.metadata[i];
+    }
+
+    //Grab demographic info from the metadata array 
+    //Age
     var mdAge = new Array()
     for (var i = 0; i < data.metadata.length; i++) {
         mdAge[data.metadata[i]["id"]] = data.metadata[i].age;
@@ -72,10 +79,11 @@ d3.json("samples.json").then((data) => {
 
     // //console.logs to test value grabs   
     // console.log(SubjectIDNo)
-    console.log(samplesAll)
+    // console.log(samplesAll)
     // console.log(sampleValues)
     // console.log(otuIds)
     // console.log(otuLabels)
+    // console.log(mdAll)
     // console.log(mdAge)
     // console.log(mdBbtype)
     // console.log(mdEthnic)
@@ -117,6 +125,7 @@ d3.json("samples.json").then((data) => {
         var sampleSet = sampleValues[dataID]    //sample_values       
         var otuIdSet = otuIds[dataID]           //otu_ids     
         var otuLabelSet = otuLabels[dataID]     //otu_labels
+        var allDi = mdAll[dataID]               //metada
         var ageDi = mdAge[dataID]               //age
         var bbtypeDi = mdBbtype[dataID]         //bbtype
         var ethnicityDi = mdEthnic[dataID]      //ethnicity
@@ -132,6 +141,7 @@ d3.json("samples.json").then((data) => {
         console.log(sampleSet)
         console.log(otuIdSet)
         console.log(otuLabelSet)
+        console.log(allDi)
         console.log(ageDi)
         console.log(bbtypeDi)
         console.log(ethnicityDi)
@@ -196,21 +206,98 @@ d3.json("samples.json").then((data) => {
             text: otuLabelSet,
             mode: 'markers',
             marker: {
-              size: sampleSet,
-              color: otuIdSet,
+                size: sampleSet,
+                color: otuIdSet,
             }
-          };
-          
-          var data = [trace1];
-          
-          var layout = {
-            title: 'Marker Size',
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            title: 'Samples',
             showlegend: false,
             height: 500,
             width: 750
-          };
+        };
+
+        Plotly.newPlot('bubble', data, layout);
+
+        //----------------------------------------------------
+        // Display the sample metadata, i.e., an individual's 
+        // demographic information.
+        //----------------------------------------------------        
+
+        var node = document.createElement("LI")
+        var textnode = document.createTextNode(`id: ${idDi}`)
+        node.appendChild(textnode)
+        document.getElementById("mdList").appendChild(node)
+
+        var node = document.createElement("LI")
+        var textnode = document.createTextNode(`ethnicity: ${ethnicityDi}`)
+        node.appendChild(textnode)
+        document.getElementById("mdList").appendChild(node)
+
+        var node = document.createElement("LI")
+        var textnode = document.createTextNode(`gender: ${genderDi}`)
+        node.appendChild(textnode)
+        document.getElementById("mdList").appendChild(node)
+
+        var node = document.createElement("LI")
+        var textnode = document.createTextNode(`age: ${ageDi}`)
+        node.appendChild(textnode)
+        document.getElementById("mdList").appendChild(node)
+
+        var node = document.createElement("LI")
+        var textnode = document.createTextNode(`location: ${locationDi}`)
+        node.appendChild(textnode)
+        document.getElementById("mdList").appendChild(node)
+
+        var node = document.createElement("LI")
+        var textnode = document.createTextNode(`bbtype: ${bbtypeDi}`)
+        node.appendChild(textnode)
+        document.getElementById("mdList").appendChild(node)
+
+        var node = document.createElement("LI")
+        var textnode = document.createTextNode(`wfreq: ${wfreqDi}`)
+        node.appendChild(textnode)
+        document.getElementById("mdList").appendChild(node)
+
+        //----------------------------------------------------
+        //Creat Gauge Chart to plot the weekly washing frequency 
+        // of the individual.
+        //----------------------------------------------------
+        var data = [
+            {
+              domain: { x: [0, 1], y: [0, 1] },
+              value: wfreqDi,
+              title: { text: "Belly Button Washing Frequency" },
+              type: "indicator",
+              mode: "gauge+number",              
+              gauge: {
+                axis: { range: [null, 9] },
+                steps: [
+                  { range: [0, 1], color: '#636EFA' },
+                  { range: [1, 2], color: '#EF553B'},
+                  { range: [2, 3], color: '#00CC96' },
+                  { range: [3, 4], color: '#AB63FA' },
+                  { range: [4, 5], color: '#FFA15A' },
+                  { range: [5, 6], color: '#19D3F3' },
+                  { range: [6, 7], color: '#FF6692' },
+                  { range: [7, 8], color: '#B6E880' },
+                  { range: [8, 9], color: '#FF97FF' }
+                ],
+                threshold: {
+                  line: { color: "red", width: 4 },
+                  thickness: 0.75,
+                  value: wfreqDi
+                }
+              }
+            }
+          ];
           
-          Plotly.newPlot('bubble', data, layout);
+          var layout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+          Plotly.newPlot('gauge', data, layout);
+
 
 
 
@@ -230,9 +317,7 @@ d3.json("samples.json").then((data) => {
 
 
 
-// 4. Display the sample metadata, i.e., an individual's demographic information.
-
 // 5. Display each key-value pair from the metadata JSON object somewhere on the page.
 
 
-// 6. Update all of the plots any time that a new sample is selected.
+
