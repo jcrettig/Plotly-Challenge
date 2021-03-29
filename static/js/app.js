@@ -1,5 +1,6 @@
 //python -m http.server
 
+
 //Use the D3 library to read in `samples.json`.
 d3.json("samples.json").then((data) => {
     console.log(data)
@@ -158,38 +159,28 @@ d3.json("samples.json").then((data) => {
         // * Use `otu_labels` as the hovertext for the chart.
         //----------------------------------------------------
 
-        // //Sort data by sample values                                !!!!!!!!!!
-        // sortedSamples = sample.sort((a, b) => b.sample_values - a.sample_values)
-        // // console.log(sortedSamples)
+        //Create trace for chart
+        var trace1 = {
+            //  x: reversedSamples.map(sample => sample.sample_values),
+            x: sampleSet.slice(0, 10).reverse(),
+            //  y: reversedSamples.map(id => id.otu_ids),
+            y: otuIdSet.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse(),
+            //  text: reversedSamples.map(label => label.otu_labels),
+            name: "Samples",
+            type: "bar",
+            orientation: "h"
+        }
 
-        // // slice the first 10 objects for plotting                  !!!!!!!!!!
-        // slicedSamples = sortedSamples.slice(0,10)
-        // // console.log(slicedSamples)
+        // Create data for Chart
+        var data = [trace1]
 
-        // // reverse the array                                        !!!!!!!!!!!
-        // reversedSamples = slicedSamples.reverse()
-        // // console.log(reversedSamples)
+        // Create Layout for Chart
+        var layout = {
+            title: "Top Ten OTUs"
+        }
 
-        // //Create trace for chart
-        // var trace1 = {
-        //  x: reversedSamples.map(sample => sample.sample_values),
-        //  y: reversedSamples.map(id => id.otu_ids),
-        //  text: reversedSamples.map(label => label.otu_labels),
-        //  name:"Samples",
-        //  type:"bar",
-        //  orientation:"h" 
-        // }
-
-        // // Create data for Chart
-        // var data = [trace1]
-
-        // // Create Layout for Chart
-        // var layout = {
-        //     title: "Top Ten OTUs"        
-        // }
-
-        // //Render the plot to the div tag
-        // Plotly.newPlot("bar", data, layout)
+        //Render the plot to the div tag
+        Plotly.newPlot("bar", data, layout)
 
         //----------------------------------------------------
         //Create a bubble chart that displays each sample.
@@ -225,7 +216,7 @@ d3.json("samples.json").then((data) => {
         //----------------------------------------------------
         // Display the sample metadata, i.e., an individual's 
         // demographic information.
-        //----------------------------------------------------        
+        //----------------------------------------------------   
 
         var node = document.createElement("LI")
         var textnode = document.createTextNode(`id: ${idDi}`)
@@ -236,31 +227,37 @@ d3.json("samples.json").then((data) => {
         var textnode = document.createTextNode(`ethnicity: ${ethnicityDi}`)
         node.appendChild(textnode)
         document.getElementById("mdList").appendChild(node)
+       
 
         var node = document.createElement("LI")
         var textnode = document.createTextNode(`gender: ${genderDi}`)
         node.appendChild(textnode)
         document.getElementById("mdList").appendChild(node)
+       
 
         var node = document.createElement("LI")
         var textnode = document.createTextNode(`age: ${ageDi}`)
         node.appendChild(textnode)
         document.getElementById("mdList").appendChild(node)
+       
 
         var node = document.createElement("LI")
         var textnode = document.createTextNode(`location: ${locationDi}`)
         node.appendChild(textnode)
         document.getElementById("mdList").appendChild(node)
+        
 
         var node = document.createElement("LI")
         var textnode = document.createTextNode(`bbtype: ${bbtypeDi}`)
         node.appendChild(textnode)
         document.getElementById("mdList").appendChild(node)
+       
 
         var node = document.createElement("LI")
         var textnode = document.createTextNode(`wfreq: ${wfreqDi}`)
         node.appendChild(textnode)
         document.getElementById("mdList").appendChild(node)
+        
 
         //----------------------------------------------------
         //Creat Gauge Chart to plot the weekly washing frequency 
@@ -268,44 +265,35 @@ d3.json("samples.json").then((data) => {
         //----------------------------------------------------
         var data = [
             {
-              domain: { x: [0, 1], y: [0, 1] },
-              value: wfreqDi,
-              title: { text: "Belly Button Washing Frequency" },
-              type: "indicator",
-              mode: "gauge+number",              
-              gauge: {
-                axis: { range: [null, 9] },
-                steps: [
-                  { range: [0, 1], color: '#636EFA' },
-                  { range: [1, 2], color: '#EF553B'},
-                  { range: [2, 3], color: '#00CC96' },
-                  { range: [3, 4], color: '#AB63FA' },
-                  { range: [4, 5], color: '#FFA15A' },
-                  { range: [5, 6], color: '#19D3F3' },
-                  { range: [6, 7], color: '#FF6692' },
-                  { range: [7, 8], color: '#B6E880' },
-                  { range: [8, 9], color: '#FF97FF' }
-                ],
-                threshold: {
-                  line: { color: "red", width: 4 },
-                  thickness: 0.75,
-                  value: wfreqDi
+                domain: { x: [0, 1], y: [0, 1] },
+                value: wfreqDi,
+                title: { text: "Belly Button Washing Frequency" },
+                type: "indicator",
+                mode: "gauge+number",
+                gauge: {
+                    axis: { range: [null, 9] },
+                    steps: [
+                        { range: [0, 1], color: '#636EFA' },
+                        { range: [1, 2], color: '#EF553B' },
+                        { range: [2, 3], color: '#00CC96' },
+                        { range: [3, 4], color: '#AB63FA' },
+                        { range: [4, 5], color: '#FFA15A' },
+                        { range: [5, 6], color: '#19D3F3' },
+                        { range: [6, 7], color: '#FF6692' },
+                        { range: [7, 8], color: '#B6E880' },
+                        { range: [8, 9], color: '#FF97FF' }
+                    ],
+                    threshold: {
+                        line: { color: "red", width: 4 },
+                        thickness: 0.75,
+                        value: wfreqDi
+                    }
                 }
-              }
             }
-          ];
-          
-          var layout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
-          Plotly.newPlot('gauge', data, layout);
+        ];
 
-
-
-
-
-
-
-
-
+        var layout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+        Plotly.newPlot('gauge', data, layout);
 
         //----------------------------------------------------
     }  // end function updatePage(){
