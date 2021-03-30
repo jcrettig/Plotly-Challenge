@@ -11,7 +11,7 @@
 4. Pushed updated local respository to GitHub.
 
 
-## Step 1: Plotly
+## Plotly
 
 1. Used the D3 library to read in `samples.json`.
 
@@ -48,7 +48,6 @@
 
 * the chart updates whenever a new sample is selected.
 
-![Weekly Washing Frequency Gauge](Images/gauge.png)
 
 ## Deployment
 
